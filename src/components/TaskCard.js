@@ -1,11 +1,13 @@
 import { FormLabel } from 'react-bootstrap';
 
 const TaskCard = ({ task, handleDelete }) => {
-	const handleTask = (e) => handleDelete(task);
+	const handleTask = (e) => {
+		handleDelete(task);
+	};
 
 	return (
 		<div id={task.id} className="task-card">
-			<li>{task['task-item']}</li>
+			<li>{task['task_item']}</li>
 			<label className="checkbox-container">
 				<input
 					id="checkbox"

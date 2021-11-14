@@ -3,13 +3,15 @@ import { Button } from 'react-bootstrap';
 import TaskCard from './TaskCard';
 
 const TaskContainer = () => {
-	const url = 'http://localhost:4000/tasks/';
+	const url = 'http://localhost:4000/tasks';
 	const [taskList, setTaskList] = useState([]);
 	const [task, setTask] = useState({});
 	const handleFormInput = (e) => {
+		console.log(`Key = ${e.target.name} : Value = ${e.target.value}`);
 		setTask({ [e.target.name]: e.target.value });
 	};
 
+	console.log(task);
 	// POSTING NEW TASK
 	const postFunction = () => {
 		fetch(url, {
@@ -21,7 +23,11 @@ const TaskContainer = () => {
 			body: JSON.stringify(task),
 		})
 			.then((r) => r.json())
-			.then((newTask) => setTaskList([...taskList, newTask]));
+
+			.then((newTask) => {
+				console.log(newTask);
+				setTaskList([...taskList, newTask]);
+			});
 	};
 
 	const handleSubmit = (e) => {
@@ -36,13 +42,13 @@ const TaskContainer = () => {
 			.then((r) => r.json())
 			.then((data) => {
 				setTaskList(data);
+				console.log('From useEffect: ', data);
 			});
 	}, []);
-	console.log(taskList);
 
 	// DELETE TASK
 	const handleDelete = (doomedTask) => {
-		fetch(url + doomedTask.id, {
+		fetch(url + '/' + doomedTask.id, {
 			method: 'DELETE',
 		}).then(() => {
 			const filteredTasks = taskList.filter(
@@ -54,7 +60,6 @@ const TaskContainer = () => {
 	};
 
 	const renderedTasks = taskList.map((task) => {
-		console.log(task);
 		return (
 			<TaskCard handleDelete={handleDelete} task={task} key={task.id} />
 		);
@@ -66,7 +71,7 @@ const TaskContainer = () => {
 			<form onSubmit={handleSubmit}>
 				<input
 					placeholder="What do you need to do?"
-					name="task-item"
+					name="task_item"
 					onChange={handleFormInput}
 					required
 				></input>
