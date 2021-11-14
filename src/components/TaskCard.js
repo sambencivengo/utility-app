@@ -1,9 +1,10 @@
 import { FormLabel } from 'react-bootstrap';
 
-const TaskCard = ({ task, handleDelete }) => {
+const TaskCard = ({ task, handleComplete, classComplete }) => {
 	const handleTask = (e) => {
-		handleDelete(task);
+		handleComplete(task);
 	};
+	console.log(classComplete);
 
 	return (
 		<div id={task.id} className="task-card">

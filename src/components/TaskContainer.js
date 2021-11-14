@@ -6,12 +6,12 @@ const TaskContainer = () => {
 	const url = 'http://localhost:4000/tasks';
 	const [taskList, setTaskList] = useState([]);
 	const [task, setTask] = useState({});
+	const [complete, setComplete] = useState(false);
 	const handleFormInput = (e) => {
 		console.log(`Key = ${e.target.name} : Value = ${e.target.value}`);
 		setTask({ [e.target.name]: e.target.value });
 	};
 
-	console.log(task);
 	// POSTING NEW TASK
 	const postFunction = () => {
 		fetch(url, {
@@ -46,6 +46,22 @@ const TaskContainer = () => {
 			});
 	}, []);
 
+	// COMPLETE TASK
+	let classComplete = 'task-card';
+
+	const handleComplete = (completedTask) => {
+		console.log(completedTask);
+		setComplete(!complete);
+		if (complete) {
+			classComplete = 'task-card-complete';
+		} else {
+			classComplete = 'task-card';
+		}
+		
+	};
+
+	console.log(complete);
+	console.log(classComplete);
 	// DELETE TASK
 	const handleDelete = (doomedTask) => {
 		fetch(url + '/' + doomedTask.id, {
@@ -61,7 +77,13 @@ const TaskContainer = () => {
 
 	const renderedTasks = taskList.map((task) => {
 		return (
-			<TaskCard handleDelete={handleDelete} task={task} key={task.id} />
+			<TaskCard
+				handleComplete={handleComplete}
+				complete={complete}
+				task={task}
+				key={task.id}
+				classComplete={classComplete}
+			/>
 		);
 	});
 
