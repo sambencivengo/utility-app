@@ -2,7 +2,7 @@ import './App.css';
 import NavBar from './NavBar';
 import Home from './Home';
 import { Route, Switch } from 'react-router-dom';
-import TaskList from './TaskList';
+import TasksSection from './TasksSection';
 import LandingPage from './LandingPage';
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
 					<Home />
 				</Route>
 				<Route path="/tasks">
-					<TaskList />
+					<TasksSection />
 				</Route>
 			</Switch>
 		</div>

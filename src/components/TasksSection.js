@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
-import TaskCard from './TaskCard';
+import React, { useState, useEffect } from 'react';
 
-const TaskContainer = () => {
+import TaskList from './TaskList';
+
+const TasksSection = () => {
 	const url = 'http://localhost:4000/tasks';
-	const [taskList, setTaskList] = useState([]);
+	const [tasks, setTasks] = useState([]);
+	const [completedTasks, setCompletedTasks] = useState([]);
 	const [task, setTask] = useState({});
-	const [complete, setComplete] = useState(false);
 	const handleFormInput = (e) => {
 		console.log(`Key = ${e.target.name} : Value = ${e.target.value}`);
 		setTask({ [e.target.name]: e.target.value });
@@ -26,7 +26,7 @@ const TaskContainer = () => {
 
 			.then((newTask) => {
 				console.log(newTask);
-				setTaskList([...taskList, newTask]);
+				setTasks([...tasks, newTask]);
 			});
 	};
 
@@ -41,55 +41,45 @@ const TaskContainer = () => {
 		fetch(url)
 			.then((r) => r.json())
 			.then((data) => {
-				setTaskList(data);
+				const incomplete = data.filter(
+					(task) => task.completed_status === false
+				);
 				console.log('From useEffect: ', data);
+
+				const complete = data.filter(
+					(task) => task.completed_status === true
+				);
+				setTasks(incomplete);
+				setCompletedTasks(complete);
 			});
 	}, []);
 
+	console.log(tasks);
+	console.log(completedTasks);
+
 	// COMPLETE TASK
-	let classComplete = 'task-card';
 
 	const handleComplete = (completedTask) => {
+		// use this
 		console.log(completedTask);
-		setComplete(!complete);
-		if (complete) {
-			classComplete = 'task-card-complete';
-		} else {
-			classComplete = 'task-card';
-		}
-		
+		setCompletedTasks([...completedTasks, completedTask]);
 	};
 
-	console.log(complete);
-	console.log(classComplete);
 	// DELETE TASK
 	const handleDelete = (doomedTask) => {
 		fetch(url + '/' + doomedTask.id, {
 			method: 'DELETE',
 		}).then(() => {
-			const filteredTasks = taskList.filter(
+			const filteredTasks = tasks.filter(
 				(task) => task.id !== doomedTask.id
 			);
-			setTaskList(filteredTasks);
+			setTasks(filteredTasks);
 		});
 		console.log(doomedTask);
 	};
 
-	const renderedTasks = taskList.map((task) => {
-		return (
-			<TaskCard
-				handleComplete={handleComplete}
-				complete={complete}
-				task={task}
-				key={task.id}
-				classComplete={classComplete}
-			/>
-		);
-	});
-
 	return (
-		<div className="task-container">
-			{renderedTasks}
+		<div>
 			<form onSubmit={handleSubmit}>
 				<input
 					placeholder="What do you need to do?"
@@ -99,8 +89,13 @@ const TaskContainer = () => {
 				></input>
 				<button>Submit</button>
 			</form>
+
+			<div className="task-lists">
+				<TaskList tasks={tasks} />
+				<TaskList tasks={completedTasks} />
+			</div>
 		</div>
 	);
 };
 
-export default TaskContainer;
+export default TasksSection;
