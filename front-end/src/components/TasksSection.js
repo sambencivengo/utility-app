@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import TaskList from './TaskList';
 
 const TasksSection = () => {
-	const url = 'http://localhost:4000/tasks';
+	const url = 'http://localhost:3000/task';
 	const [tasks, setTasks] = useState([]);
 	const [completedTasks, setCompletedTasks] = useState([]);
 	const [task, setTask] = useState({});
